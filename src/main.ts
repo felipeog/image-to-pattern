@@ -75,9 +75,9 @@ function handleFormSubmit(event: SubmitEvent) {
 
   if (!imgSrc) return;
 
-  outputSvg.innerHTML = "";
-
   img.onload = () => {
+    outputSvg.innerHTML = "";
+
     canvas.width = img.width;
     canvas.height = img.height;
     context.drawImage(img, 0, 0);
