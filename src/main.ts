@@ -34,6 +34,7 @@ const form = $("#form") as HTMLFormElement;
 const inputImage = $("#input") as HTMLImageElement;
 const outputSvg = $("#output") as SVGSVGElement;
 const downloadButton = $("#download-button") as HTMLButtonElement;
+const colorReverseButton = $("#color-reverse") as HTMLButtonElement;
 
 // =============================================================================
 // event listeners
@@ -42,6 +43,7 @@ const downloadButton = $("#download-button") as HTMLButtonElement;
 window.addEventListener("load", handleWindowLoad);
 form.addEventListener("submit", handleFormSubmit);
 downloadButton.addEventListener("click", handleDownloadButtonClick);
+colorReverseButton.addEventListener("click", handleColorReverseButtonClick);
 
 // =============================================================================
 // event handlers
@@ -276,6 +278,15 @@ function handleDownloadButtonClick() {
   document.body.removeChild(link);
 
   URL.revokeObjectURL(link.href);
+}
+
+function handleColorReverseButtonClick() {
+  const foreground = $("#foreground");
+  const background = $("#background");
+  const foregroundCopy = foreground.value;
+
+  foreground.value = background.value;
+  background.value = foregroundCopy;
 }
 
 // =============================================================================

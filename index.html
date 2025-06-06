@@ -18,13 +18,25 @@
 
         <label>
           foreground:
-          <input type="color" name="foreground" value="#000000" />
+          <input
+            type="color"
+            id="foreground"
+            name="foreground"
+            value="#000000"
+          />
         </label>
         <br />
         <label>
           background:
-          <input type="color" name="background" value="#ffffff" />
+          <input
+            type="color"
+            id="background"
+            name="background"
+            value="#ffffff"
+          />
         </label>
+        <br />
+        <button id="color-reverse" type="button">reverse</button>
       </fieldset>
 
       <fieldset>
@@ -74,7 +86,7 @@
       </fieldset>
 
       <br />
-      <input type="submit" value="send" />
+      <input type="submit" value="generate" />
     </form>
 
     <hr />
