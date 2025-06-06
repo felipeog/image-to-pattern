@@ -1,11 +1,19 @@
+// https://br.pinterest.com/felipeog476/image-to-pattern/
+
 // =============================================================================
 // todos
 // =============================================================================
 
 /*
-different patterns (https://br.pinterest.com/felipeog476/image-to-pattern/)
 unify shared form inputs
 */
+
+// =============================================================================
+// constants
+// =============================================================================
+
+const imageOptions = ["/skull-0.png", "/skull-1.png", "/skull-2.png"];
+const patternOptions = ["lines", "dots", "triangles"];
 
 // =============================================================================
 // elements
@@ -34,7 +42,6 @@ downloadButton.addEventListener("click", handleDownloadButtonClick);
 // =============================================================================
 
 function handleWindowLoad() {
-  const imageOptions = ["/skull-0.png", "/skull-1.png", "/skull-2.png"];
   const imageSelect = $("#image-select") as HTMLSelectElement;
 
   imageOptions.forEach((imageOption) => {
@@ -44,6 +51,17 @@ function handleWindowLoad() {
     option.textContent = imageOption;
 
     imageSelect.append(option);
+  });
+
+  const patternSelect = $("#pattern-select") as HTMLSelectElement;
+
+  patternOptions.forEach((patternOption) => {
+    const option = createHtmlElement("option");
+
+    option.setAttribute("value", patternOption);
+    option.textContent = patternOption;
+
+    patternSelect.append(option);
   });
 }
 
@@ -59,6 +77,7 @@ function handleFormSubmit(event: SubmitEvent) {
   const foreground = String(formData.get("foreground"));
   const background = String(formData.get("background"));
   const margin = Number(formData.get("margin"));
+  const pattern = formData.get("pattern") as string;
   let imgSrc = "";
 
   if (formId === "file-form") {
@@ -142,50 +161,89 @@ function handleFormSubmit(event: SubmitEvent) {
       }
     }
 
-    for (let col = 0; col < colCount; col++) {
-      const path = createSvgElement("path");
-      let d = "";
+    if (pattern === "lines") {
+      for (let col = 0; col < colCount; col++) {
+        const path = createSvgElement("path");
+        let d = "";
 
-      const firstRow = 0;
-      const firstBlack = blacks[firstRow][col];
+        const firstRow = 0;
+        const firstBlack = blacks[firstRow][col];
 
-      d += `M ${col * width + offset}, ${0 + offset} `;
-      // prettier-ignore
-      d += [
+        d += `M ${col * width + offset}, ${0 + offset} `;
+        // prettier-ignore
+        d += [
         "C",
         `${col * width + offset}, ${firstRow * height + height * (1 / 4) + offset}`,
         `${col * width + firstBlack * width + offset}, ${firstRow * height + height * (1 / 4) + offset}`,
         `${col * width + firstBlack * width + offset}, ${firstRow * height + height * (1 / 2) + offset} `,
       ].join(" ");
 
-      for (let row = 0; row < rowCount - 1; row++) {
-        const currBlack = blacks[row][col];
-        const nextBlack = blacks[row + 1][col];
+        for (let row = 0; row < rowCount - 1; row++) {
+          const currBlack = blacks[row][col];
+          const nextBlack = blacks[row + 1][col];
 
-        // prettier-ignore
-        d += [
+          // prettier-ignore
+          d += [
           "C",
           `${col * width + currBlack * width + offset}, ${row * height + height + offset}`,
           `${col * width + nextBlack * width + offset}, ${(row + 1) * height + offset}`,
           `${col * width + nextBlack * width + offset}, ${(row + 1) * height + height * (1 / 2) + offset} `,
         ].join(" ");
-      }
+        }
 
-      const lastRow = rowCount - 1;
-      const lastBlack = blacks[lastRow][col];
+        const lastRow = rowCount - 1;
+        const lastBlack = blacks[lastRow][col];
 
-      // prettier-ignore
-      d += [
+        // prettier-ignore
+        d += [
         "C",
         `${col * width + lastBlack * width + offset}, ${lastRow * height + height * (3 / 4) + offset}`,
         `${col * width + offset}, ${lastRow * height + height * (3 / 4) + offset}`,
         `${col * width + offset}, ${lastRow * height + height + offset} `,
       ].join(" ");
-      d += `z`;
+        d += `z`;
 
-      path.setAttribute("fill", foreground);
-      path.setAttribute("d", d);
-      outputSvg.append(path);
+        path.setAttribute("fill", foreground);
+        path.setAttribute("d", d);
+        outputSvg.append(path);
+      }
+    }
+
+    if (pattern === "dots") {
+      for (let row = 0; row < rowCount; row++) {
+        for (let col = 0; col < colCount; col++) {
+          const black = blacks[row][col];
+          const circle = createSvgElement("circle");
+
+          circle.setAttribute("fill", foreground);
+          circle.setAttribute("r", String(black * (width / 2)));
+          circle.setAttribute("cx", String(col * width + width / 2 + offset));
+          circle.setAttribute("cy", String(row * height + height / 2 + offset));
+
+          outputSvg.append(circle);
+        }
+      }
+    }
+
+    if (pattern === "triangles") {
+      for (let col = 0; col < colCount; col++) {
+        const path = createSvgElement("path");
+        let d = `M ${col * width + offset}, ${0 + offset} `;
+
+        for (let row = 0; row < rowCount; row++) {
+          const black = blacks[row][col];
+
+          // prettier-ignore
+          d += `L ${col * width + black * width + offset}, ${row * height + height / 2 + offset} `;
+          // prettier-ignore
+          d += `L ${col * width + offset}, ${row * height + height + offset} `;
+        }
+
+        d += `z`;
+
+        path.setAttribute("d", d);
+        outputSvg.append(path);
+      }
     }
   };
 
