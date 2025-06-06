@@ -3,8 +3,8 @@
 // =============================================================================
 
 /*
-light and dark modes
-show original image
+custom foreground and background colors
+show image and pattern side by side
 different patterns (https://br.pinterest.com/felipeog476/image-to-pattern/)
 */
 
