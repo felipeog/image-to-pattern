@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+
+    <title>image to pattern</title>
+  </head>
+
+  <body>
+    <form id="file-form">
+      <label>
+        columns:
+        <input type="number" id="columns" name="columns" value="100" />
+      </label>
+
+      <br />
+
+      <label>
+        file:
+        <input type="file" id="upload" name="upload" accept="image/*" />
+      </label>
+
+      <br />
+
+      <input type="submit" value="send" />
+    </form>
+
+    <hr />
+
+    <form id="image-form">
+      <label>
+        columns:
+        <input type="number" id="columns" name="columns" value="100" />
+      </label>
+
+      <br />
+
+      <label>
+        image
+        <select name="image" id="image-select"></select>
+      </label>
+
+      <br />
+
+      <input type="submit" value="send" />
+    </form>
+
+    <hr />
+
+    <br />
+
+    <svg id="output" xmlns="http://www.w3.org/2000/svg"></svg>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
