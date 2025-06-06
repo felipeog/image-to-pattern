@@ -4,6 +4,7 @@
 
 /*
 different patterns (https://br.pinterest.com/felipeog476/image-to-pattern/)
+unify shared form inputs
 */
 
 // =============================================================================
@@ -189,6 +190,11 @@ function handleFormSubmit(event: SubmitEvent) {
   };
 
   img.src = imgSrc;
+
+  inputImage.onload = () => {
+    inputImage.style.display = "block";
+  };
+
   inputImage.src = imgSrc;
 }
 
@@ -216,9 +222,9 @@ function $(selectors: any) {
   return document.querySelector(selectors);
 }
 
-function $$(selectors: any) {
-  return document.querySelectorAll(selectors);
-}
+// function $$(selectors: any) {
+//   return document.querySelectorAll(selectors);
+// }
 
 function createHtmlElement<K extends keyof HTMLElementTagNameMap>(
   tagName: K,

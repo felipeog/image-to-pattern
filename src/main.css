@@ -1,3 +1,7 @@
+#input {
+  display: none;
+}
+
 #image-pattern-wrapper {
   display: flex;
 }
