@@ -3,7 +3,7 @@
 // =============================================================================
 
 /*
-custom foreground and background colors
+custom margin
 show image and pattern side by side
 different patterns (https://br.pinterest.com/felipeog476/image-to-pattern/)
 */
@@ -66,6 +66,8 @@ function handleFormSubmit(event: SubmitEvent) {
   const formId = formElement.getAttribute("id");
   const formData = new FormData(formElement);
   const columns = Number(formData.get("columns"));
+  const foreground = String(formData.get("foreground"));
+  const background = String(formData.get("background"));
   let imgSrc = "";
 
   if (formId === "file-form") {
@@ -102,7 +104,7 @@ function handleFormSubmit(event: SubmitEvent) {
 
     const rect = document.createElementNS(xmlns, "rect");
 
-    rect.setAttribute("fill", "white");
+    rect.setAttribute("fill", background);
     rect.setAttribute("width", String(colCount * width + margin * 2));
     rect.setAttribute("height", String(rowCount * height + margin * 2));
     outputSvg.append(rect);
@@ -190,6 +192,7 @@ function handleFormSubmit(event: SubmitEvent) {
       ].join(" ");
       d += `z`;
 
+      path.setAttribute("fill", foreground);
       path.setAttribute("d", d);
       outputSvg.append(path);
     }
