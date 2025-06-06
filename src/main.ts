@@ -8,31 +8,23 @@ different patterns (https://br.pinterest.com/felipeog476/image-to-pattern/)
 */
 
 // =============================================================================
-// constants
-// =============================================================================
-
-const xmlns = "http://www.w3.org/2000/svg";
-
-// =============================================================================
 // elements
 // =============================================================================
 
 const img = new Image();
 const canvas = new OffscreenCanvas(0, 0);
 const context = canvas.getContext("2d", { willReadFrequently: true });
-const form = document.querySelector("#file-form") as HTMLFormElement;
-const imageForm = document.querySelector("#image-form") as HTMLFormElement;
-const outputSvg = document.querySelector("#output") as SVGSVGElement;
-const downloadButton = document.querySelector(
-  "#download-button"
-) as HTMLButtonElement;
+const fileForm = $("#file-form") as HTMLFormElement;
+const imageForm = $("#image-form") as HTMLFormElement;
+const outputSvg = $("#output") as SVGSVGElement;
+const downloadButton = $("#download-button") as HTMLButtonElement;
 
 // =============================================================================
 // event listeners
 // =============================================================================
 
 window.addEventListener("load", handleWindowLoad);
-form.addEventListener("submit", handleFormSubmit);
+fileForm.addEventListener("submit", handleFormSubmit);
 imageForm.addEventListener("submit", handleFormSubmit);
 downloadButton.addEventListener("click", handleDownloadButtonClick);
 
@@ -42,12 +34,10 @@ downloadButton.addEventListener("click", handleDownloadButtonClick);
 
 function handleWindowLoad() {
   const imageOptions = ["/skull-0.png", "/skull-1.png", "/skull-2.png"];
-  const imageSelect = document.querySelector(
-    "#image-select"
-  ) as HTMLSelectElement;
+  const imageSelect = $("#image-select") as HTMLSelectElement;
 
   imageOptions.forEach((imageOption) => {
-    const option = document.createElement("option");
+    const option = createHtmlElement("option");
 
     option.setAttribute("value", imageOption);
     option.textContent = imageOption;
@@ -102,7 +92,7 @@ function handleFormSubmit(event: SubmitEvent) {
       `0 0 ${colCount * width + offset * 2} ${rowCount * height + offset * 2}`
     );
 
-    const rect = document.createElementNS(xmlns, "rect");
+    const rect = createSvgElement("rect");
 
     rect.setAttribute("fill", background);
     rect.setAttribute("width", String(colCount * width + offset * 2));
@@ -152,7 +142,7 @@ function handleFormSubmit(event: SubmitEvent) {
     }
 
     for (let col = 0; col < colCount; col++) {
-      const path = document.createElementNS(xmlns, "path");
+      const path = createSvgElement("path");
       let d = "";
 
       const firstRow = 0;
@@ -205,7 +195,7 @@ function handleDownloadButtonClick() {
   const serializer = new XMLSerializer();
   const svgString = serializer.serializeToString(outputSvg);
   const blob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
-  const link = document.createElement("a");
+  const link = createHtmlElement("a");
 
   link.href = URL.createObjectURL(blob);
   link.download = "image-to-pattern.svg";
@@ -215,4 +205,34 @@ function handleDownloadButtonClick() {
   document.body.removeChild(link);
 
   URL.revokeObjectURL(link.href);
+}
+
+// =============================================================================
+// helpers
+// =============================================================================
+
+function $(selectors: any) {
+  return document.querySelector(selectors);
+}
+
+function $$(selectors: any) {
+  return document.querySelectorAll(selectors);
+}
+
+function createHtmlElement<K extends keyof HTMLElementTagNameMap>(
+  tagName: K,
+  options?: ElementCreationOptions
+) {
+  return document.createElement(tagName, options);
+}
+
+function createSvgElement(
+  qualifiedName: string,
+  options?: ElementCreationOptions
+) {
+  return document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    qualifiedName,
+    options
+  );
 }
