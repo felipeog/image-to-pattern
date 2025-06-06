@@ -18,8 +18,9 @@ const imageOptions = [
   { textContent: "Skull 2", value: "/skull-2.png" },
 ];
 const patternOptions = [
-  { textContent: "Lines", value: "lines" },
+  { textContent: "Dice", value: "dice" },
   { textContent: "Dots", value: "dots" },
+  { textContent: "Lines", value: "lines" },
   { textContent: "Triangles", value: "triangles" },
 ];
 
@@ -179,37 +180,37 @@ function handleFormSubmit(event: SubmitEvent) {
         let d = "";
 
         const firstRow = 0;
-        const firstBlack = matrix[firstRow][col];
+        const firstItem = matrix[firstRow][col];
 
         d += `M ${col * width + offset}, ${0 + offset} `;
         // prettier-ignore
         d += [
         "C",
         `${col * width + offset}, ${firstRow * height + height * (1 / 4) + offset}`,
-        `${col * width + firstBlack * width + offset}, ${firstRow * height + height * (1 / 4) + offset}`,
-        `${col * width + firstBlack * width + offset}, ${firstRow * height + height * (1 / 2) + offset} `,
+        `${col * width + firstItem * width + offset}, ${firstRow * height + height * (1 / 4) + offset}`,
+        `${col * width + firstItem * width + offset}, ${firstRow * height + height * (1 / 2) + offset} `,
       ].join(" ");
 
         for (let row = 0; row < rowCount - 1; row++) {
-          const currBlack = matrix[row][col];
-          const nextBlack = matrix[row + 1][col];
+          const currItem = matrix[row][col];
+          const nextItem = matrix[row + 1][col];
 
           // prettier-ignore
           d += [
           "C",
-          `${col * width + currBlack * width + offset}, ${row * height + height + offset}`,
-          `${col * width + nextBlack * width + offset}, ${(row + 1) * height + offset}`,
-          `${col * width + nextBlack * width + offset}, ${(row + 1) * height + height * (1 / 2) + offset} `,
+          `${col * width + currItem * width + offset}, ${row * height + height + offset}`,
+          `${col * width + nextItem * width + offset}, ${(row + 1) * height + offset}`,
+          `${col * width + nextItem * width + offset}, ${(row + 1) * height + height * (1 / 2) + offset} `,
         ].join(" ");
         }
 
         const lastRow = rowCount - 1;
-        const lastBlack = matrix[lastRow][col];
+        const lastItem = matrix[lastRow][col];
 
         // prettier-ignore
         d += [
         "C",
-        `${col * width + lastBlack * width + offset}, ${lastRow * height + height * (3 / 4) + offset}`,
+        `${col * width + lastItem * width + offset}, ${lastRow * height + height * (3 / 4) + offset}`,
         `${col * width + offset}, ${lastRow * height + height * (3 / 4) + offset}`,
         `${col * width + offset}, ${lastRow * height + height + offset} `,
       ].join(" ");
@@ -224,11 +225,11 @@ function handleFormSubmit(event: SubmitEvent) {
     if (pattern === "dots") {
       for (let row = 0; row < rowCount; row++) {
         for (let col = 0; col < colCount; col++) {
-          const black = matrix[row][col];
+          const item = matrix[row][col];
           const circle = createSvgElement("circle");
 
           circle.setAttribute("fill", foreground);
-          circle.setAttribute("r", String(black * (width / 2)));
+          circle.setAttribute("r", String(item * (width / 2)));
           circle.setAttribute("cx", String(col * width + width / 2 + offset));
           circle.setAttribute("cy", String(row * height + height / 2 + offset));
 
@@ -243,10 +244,10 @@ function handleFormSubmit(event: SubmitEvent) {
         let d = `M ${col * width + offset}, ${0 + offset} `;
 
         for (let row = 0; row < rowCount; row++) {
-          const black = matrix[row][col];
+          const item = matrix[row][col];
 
           // prettier-ignore
-          d += `L ${col * width + black * width + offset}, ${row * height + height / 2 + offset} `;
+          d += `L ${col * width + item * width + offset}, ${row * height + height / 2 + offset} `;
           // prettier-ignore
           d += `L ${col * width + offset}, ${row * height + height + offset} `;
         }
@@ -256,6 +257,122 @@ function handleFormSubmit(event: SubmitEvent) {
         path.setAttribute("fill", foreground);
         path.setAttribute("d", d);
         outputSvg.append(path);
+      }
+    }
+
+    // TODO: create `defs` to reuse faces
+    if (pattern === "dice") {
+      function createCircle() {
+        const c = createSvgElement("circle");
+
+        c.setAttribute("fill", foreground);
+        c.setAttribute("r", String(width * 0.1));
+
+        return c;
+      }
+
+      for (let col = 0; col < colCount; col++) {
+        for (let row = 0; row < rowCount; row++) {
+          const item = matrix[row][col];
+
+          const l = col * width; // left offset
+          const t = row * height; // top offset
+
+          const face = Math.round(item * 6);
+          const c1 = createCircle();
+          const c2 = createCircle();
+          const c3 = createCircle();
+          const c4 = createCircle();
+          const c5 = createCircle();
+          const c6 = createCircle();
+
+          if (face === 1) {
+            c1.setAttribute("cx", String(l + width * (1 / 2) + offset));
+            c1.setAttribute("cy", String(t + height * (1 / 2) + offset));
+
+            outputSvg.append(c1);
+          }
+
+          if (face === 2) {
+            c1.setAttribute("cx", String(l + width * (1 / 4) + offset));
+            c1.setAttribute("cy", String(t + height * (1 / 4) + offset));
+
+            c2.setAttribute("cx", String(l + width * (3 / 4) + offset));
+            c2.setAttribute("cy", String(t + height * (3 / 4) + offset));
+
+            outputSvg.append(c1, c2);
+          }
+
+          if (face === 3) {
+            c1.setAttribute("cx", String(l + width * (1 / 4) + offset));
+            c1.setAttribute("cy", String(t + height * (1 / 4) + offset));
+
+            c2.setAttribute("cx", String(l + width * (1 / 2) + offset));
+            c2.setAttribute("cy", String(t + height * (1 / 2) + offset));
+
+            c3.setAttribute("cx", String(l + width * (3 / 4) + offset));
+            c3.setAttribute("cy", String(t + height * (3 / 4) + offset));
+
+            outputSvg.append(c1, c2, c3);
+          }
+
+          if (face === 4) {
+            c1.setAttribute("cx", String(l + width * (1 / 4) + offset));
+            c1.setAttribute("cy", String(t + height * (1 / 4) + offset));
+
+            c2.setAttribute("cx", String(l + width * (3 / 4) + offset));
+            c2.setAttribute("cy", String(t + height * (1 / 4) + offset));
+
+            c3.setAttribute("cx", String(l + width * (3 / 4) + offset));
+            c3.setAttribute("cy", String(t + height * (3 / 4) + offset));
+
+            c4.setAttribute("cx", String(l + width * (1 / 4) + offset));
+            c4.setAttribute("cy", String(t + height * (3 / 4) + offset));
+
+            outputSvg.append(c1, c2, c3, c4);
+          }
+
+          if (face === 5) {
+            c1.setAttribute("cx", String(l + width * (1 / 4) + offset));
+            c1.setAttribute("cy", String(t + height * (1 / 4) + offset));
+
+            c2.setAttribute("cx", String(l + width * (3 / 4) + offset));
+            c2.setAttribute("cy", String(t + height * (1 / 4) + offset));
+
+            c3.setAttribute("cx", String(l + width * (1 / 2) + offset));
+            c3.setAttribute("cy", String(t + height * (1 / 2) + offset));
+
+            c4.setAttribute("cx", String(l + width * (3 / 4) + offset));
+            c4.setAttribute("cy", String(t + height * (3 / 4) + offset));
+
+            c5.setAttribute("cx", String(l + width * (1 / 4) + offset));
+            c5.setAttribute("cy", String(t + height * (3 / 4) + offset));
+
+            outputSvg.append(c1, c2, c3, c4, c5);
+          }
+
+          if (face === 6) {
+            c1.setAttribute("cx", String(l + width * (1 / 4) + offset));
+            c1.setAttribute("cy", String(t + height * (1 / 3) + offset));
+
+            c2.setAttribute("cx", String(l + width * (1 / 2) + offset));
+            c2.setAttribute("cy", String(t + height * (1 / 3) + offset));
+
+            c3.setAttribute("cx", String(l + width * (3 / 4) + offset));
+            c3.setAttribute("cy", String(t + height * (1 / 3) + offset));
+
+            c4.setAttribute("cx", String(l + width * (1 / 4) + offset));
+            c4.setAttribute("cy", String(t + height * (2 / 3) + offset));
+
+            c5.setAttribute("cx", String(l + width * (1 / 2) + offset));
+            c5.setAttribute("cy", String(t + height * (2 / 3) + offset));
+
+            c6.setAttribute("cx", String(l + width * (3 / 4) + offset));
+            c6.setAttribute("cy", String(t + height * (2 / 3) + offset));
+
+            outputSvg.append(c1, c2, c3, c4, c5, c6);
+          }
+        }
       }
     }
   };
