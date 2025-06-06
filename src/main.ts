@@ -3,7 +3,6 @@
 // =============================================================================
 
 /*
-custom margin
 show image and pattern side by side
 different patterns (https://br.pinterest.com/felipeog476/image-to-pattern/)
 */
@@ -68,6 +67,7 @@ function handleFormSubmit(event: SubmitEvent) {
   const columns = Number(formData.get("columns"));
   const foreground = String(formData.get("foreground"));
   const background = String(formData.get("background"));
+  const margin = Number(formData.get("margin"));
   let imgSrc = "";
 
   if (formId === "file-form") {
@@ -91,7 +91,7 @@ function handleFormSubmit(event: SubmitEvent) {
     canvas.height = img.height;
     context.drawImage(img, 0, 0);
 
-    const margin = img.width * (1 / 10);
+    const offset = img.width * margin;
     const colCount = columns;
     const width = img.width / colCount;
     const rowCount = Math.floor(img.height / width);
@@ -99,14 +99,14 @@ function handleFormSubmit(event: SubmitEvent) {
 
     outputSvg.setAttribute(
       "viewBox",
-      `0 0 ${colCount * width + margin * 2} ${rowCount * height + margin * 2}`
+      `0 0 ${colCount * width + offset * 2} ${rowCount * height + offset * 2}`
     );
 
     const rect = document.createElementNS(xmlns, "rect");
 
     rect.setAttribute("fill", background);
-    rect.setAttribute("width", String(colCount * width + margin * 2));
-    rect.setAttribute("height", String(rowCount * height + margin * 2));
+    rect.setAttribute("width", String(colCount * width + offset * 2));
+    rect.setAttribute("height", String(rowCount * height + offset * 2));
     outputSvg.append(rect);
 
     const whites = [] as number[][];
@@ -158,13 +158,13 @@ function handleFormSubmit(event: SubmitEvent) {
       const firstRow = 0;
       const firstBlack = blacks[firstRow][col];
 
-      d += `M ${col * width + margin}, ${0 + margin} `;
+      d += `M ${col * width + offset}, ${0 + offset} `;
       // prettier-ignore
       d += [
         "C",
-        `${col * width + margin}, ${firstRow * height + height * (1 / 4) + margin}`,
-        `${col * width + firstBlack * width + margin}, ${firstRow * height + height * (1 / 4) + margin}`,
-        `${col * width + firstBlack * width + margin}, ${firstRow * height + height * (1 / 2) + margin} `,
+        `${col * width + offset}, ${firstRow * height + height * (1 / 4) + offset}`,
+        `${col * width + firstBlack * width + offset}, ${firstRow * height + height * (1 / 4) + offset}`,
+        `${col * width + firstBlack * width + offset}, ${firstRow * height + height * (1 / 2) + offset} `,
       ].join(" ");
 
       for (let row = 0; row < rowCount - 1; row++) {
@@ -174,9 +174,9 @@ function handleFormSubmit(event: SubmitEvent) {
         // prettier-ignore
         d += [
           "C",
-          `${col * width + currBlack * width + margin}, ${row * height + height + margin}`,
-          `${col * width + nextBlack * width + margin}, ${(row + 1) * height + margin}`,
-          `${col * width + nextBlack * width + margin}, ${(row + 1) * height + height * (1 / 2) + margin} `,
+          `${col * width + currBlack * width + offset}, ${row * height + height + offset}`,
+          `${col * width + nextBlack * width + offset}, ${(row + 1) * height + offset}`,
+          `${col * width + nextBlack * width + offset}, ${(row + 1) * height + height * (1 / 2) + offset} `,
         ].join(" ");
       }
 
@@ -186,9 +186,9 @@ function handleFormSubmit(event: SubmitEvent) {
       // prettier-ignore
       d += [
         "C",
-        `${col * width + lastBlack * width + margin}, ${lastRow * height + height * (3 / 4) + margin}`,
-        `${col * width + margin}, ${lastRow * height + height * (3 / 4) + margin}`,
-        `${col * width + margin}, ${lastRow * height + height + margin} `,
+        `${col * width + lastBlack * width + offset}, ${lastRow * height + height * (3 / 4) + offset}`,
+        `${col * width + offset}, ${lastRow * height + height * (3 / 4) + offset}`,
+        `${col * width + offset}, ${lastRow * height + height + offset} `,
       ].join(" ");
       d += `z`;
 
