@@ -12,104 +12,68 @@
   </head>
 
   <body>
-    <form id="file-form">
-      <label>
-        foreground:
-        <input type="color" name="foreground" value="#000000" />
-      </label>
+    <form id="form">
+      <fieldset>
+        <legend>colors</legend>
+
+        <label>
+          foreground:
+          <input type="color" name="foreground" value="#000000" />
+        </label>
+        <br />
+        <label>
+          background:
+          <input type="color" name="background" value="#ffffff" />
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>dimensions</legend>
+
+        <label>
+          columns:
+          <input type="number" name="columns" value="50" />
+        </label>
+        <br />
+        <label>
+          margin:
+          <input
+            type="number"
+            name="margin"
+            value="0"
+            min="0"
+            max="1"
+            step="0.02"
+          />
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>input</legend>
+
+        <input type="radio" name="input" value="file" checked />
+        <label>
+          file:
+          <input type="file" name="upload" accept="image/*" />
+        </label>
+        <br />
+        <input type="radio" name="input" value="image" />
+        <label>
+          image:
+          <select name="image" id="image-select"></select>
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>output</legend>
+
+        <label>
+          pattern:
+          <select name="pattern" id="pattern-select"></select>
+        </label>
+      </fieldset>
 
       <br />
-
-      <label>
-        background:
-        <input type="color" name="background" value="#ffffff" />
-      </label>
-
-      <br />
-
-      <label>
-        columns:
-        <input type="number" name="columns" value="50" />
-      </label>
-
-      <br />
-
-      <label>
-        margin (0 ~ 1):
-        <input
-          type="number"
-          name="margin"
-          value="0"
-          min="0"
-          max="1"
-          step="0.02"
-        />
-      </label>
-
-      <br />
-
-      <label>
-        file:
-        <input type="file" name="upload" accept="image/*" />
-      </label>
-
-      <br />
-
-      <input type="submit" value="send" />
-    </form>
-
-    <hr />
-
-    <form id="image-form">
-      <label>
-        foreground:
-        <input type="color" name="foreground" value="#000000" />
-      </label>
-
-      <br />
-
-      <label>
-        background:
-        <input type="color" name="background" value="#ffffff" />
-      </label>
-
-      <br />
-
-      <label>
-        columns:
-        <input type="number" name="columns" value="50" />
-      </label>
-
-      <br />
-
-      <label>
-        margin (0 ~ 1):
-        <input
-          type="number"
-          name="margin"
-          value="0"
-          min="0"
-          max="1"
-          step="0.02"
-        />
-      </label>
-
-      <br />
-
-      <label>
-        image:
-        <select name="image" id="image-select"></select>
-      </label>
-
-      <br />
-
-      <label>
-        pattern:
-        <select name="pattern" id="pattern-select"></select>
-      </label>
-
-      <br />
-
       <input type="submit" value="send" />
     </form>
 

@@ -5,7 +5,7 @@
 // =============================================================================
 
 /*
-unify shared form inputs
+improve layout
 */
 
 // =============================================================================
@@ -30,8 +30,7 @@ const patternOptions = [
 const img = new Image();
 const canvas = new OffscreenCanvas(0, 0);
 const context = canvas.getContext("2d", { willReadFrequently: true });
-const fileForm = $("#file-form") as HTMLFormElement;
-const imageForm = $("#image-form") as HTMLFormElement;
+const form = $("#form") as HTMLFormElement;
 const inputImage = $("#input") as HTMLImageElement;
 const outputSvg = $("#output") as SVGSVGElement;
 const downloadButton = $("#download-button") as HTMLButtonElement;
@@ -41,8 +40,7 @@ const downloadButton = $("#download-button") as HTMLButtonElement;
 // =============================================================================
 
 window.addEventListener("load", handleWindowLoad);
-fileForm.addEventListener("submit", handleFormSubmit);
-imageForm.addEventListener("submit", handleFormSubmit);
+form.addEventListener("submit", handleFormSubmit);
 downloadButton.addEventListener("click", handleDownloadButtonClick);
 
 // =============================================================================
@@ -79,8 +77,8 @@ function handleFormSubmit(event: SubmitEvent) {
   if (!context) return;
 
   const formElement = event.target as HTMLFormElement;
-  const formId = formElement.getAttribute("id");
   const formData = new FormData(formElement);
+  const input = String(formData.get("input"));
   const columns = Number(formData.get("columns"));
   const foreground = String(formData.get("foreground"));
   const background = String(formData.get("background"));
@@ -88,13 +86,13 @@ function handleFormSubmit(event: SubmitEvent) {
   const pattern = formData.get("pattern") as string;
   let imgSrc = "";
 
-  if (formId === "file-form") {
+  if (input === "file") {
     const file = formData.get("upload") as Blob;
     if (!file) return;
     imgSrc = URL.createObjectURL(file);
   }
 
-  if (formId === "image-form") {
+  if (input === "image") {
     const image = formData.get("image") as string;
     if (!image) return;
     imgSrc = image;
