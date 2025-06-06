@@ -249,6 +249,7 @@ function handleFormSubmit(event: SubmitEvent) {
 
         d += `z`;
 
+        path.setAttribute("fill", foreground);
         path.setAttribute("d", d);
         outputSvg.append(path);
       }
