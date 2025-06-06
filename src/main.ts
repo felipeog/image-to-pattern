@@ -3,7 +3,6 @@
 // =============================================================================
 
 /*
-show image and pattern side by side
 different patterns (https://br.pinterest.com/felipeog476/image-to-pattern/)
 */
 
@@ -16,6 +15,7 @@ const canvas = new OffscreenCanvas(0, 0);
 const context = canvas.getContext("2d", { willReadFrequently: true });
 const fileForm = $("#file-form") as HTMLFormElement;
 const imageForm = $("#image-form") as HTMLFormElement;
+const inputImage = $("#input") as HTMLImageElement;
 const outputSvg = $("#output") as SVGSVGElement;
 const downloadButton = $("#download-button") as HTMLButtonElement;
 
@@ -189,6 +189,7 @@ function handleFormSubmit(event: SubmitEvent) {
   };
 
   img.src = imgSrc;
+  inputImage.src = imgSrc;
 }
 
 function handleDownloadButtonClick() {

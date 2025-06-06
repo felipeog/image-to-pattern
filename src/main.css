@@ -1,0 +1,7 @@
+#image-pattern-wrapper {
+  display: flex;
+}
+
+#image-pattern-wrapper > * {
+  width: 50%;
+}

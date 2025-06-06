@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="stylesheet" href="/src/main.css" />
 
     <title>image to pattern</title>
   </head>
@@ -38,7 +39,7 @@
         <input
           type="number"
           name="margin"
-          value="0.1"
+          value="0"
           min="0"
           max="1"
           step="0.02"
@@ -86,7 +87,7 @@
         <input
           type="number"
           name="margin"
-          value="0.1"
+          value="0"
           min="0"
           max="1"
           step="0.02"
@@ -111,7 +112,10 @@
 
     <hr />
 
-    <svg id="output" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div id="image-pattern-wrapper">
+      <img id="input" src="" alt="original image" />
+      <svg id="output" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
 
     <script type="module" src="/src/main.ts"></script>
   </body>
