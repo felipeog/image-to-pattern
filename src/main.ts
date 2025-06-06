@@ -12,8 +12,16 @@ unify shared form inputs
 // constants
 // =============================================================================
 
-const imageOptions = ["/skull-0.png", "/skull-1.png", "/skull-2.png"];
-const patternOptions = ["lines", "dots", "triangles"];
+const imageOptions = [
+  { textContent: "Skull 0", value: "/skull-0.png" },
+  { textContent: "Skull 1", value: "/skull-1.png" },
+  { textContent: "Skull 2", value: "/skull-2.png" },
+];
+const patternOptions = [
+  { textContent: "Lines", value: "lines" },
+  { textContent: "Dots", value: "dots" },
+  { textContent: "Triangles", value: "triangles" },
+];
 
 // =============================================================================
 // elements
@@ -44,22 +52,22 @@ downloadButton.addEventListener("click", handleDownloadButtonClick);
 function handleWindowLoad() {
   const imageSelect = $("#image-select") as HTMLSelectElement;
 
-  imageOptions.forEach((imageOption) => {
+  imageOptions.forEach(({ textContent, value }) => {
     const option = createHtmlElement("option");
 
-    option.setAttribute("value", imageOption);
-    option.textContent = imageOption;
+    option.setAttribute("value", value);
+    option.textContent = textContent;
 
     imageSelect.append(option);
   });
 
   const patternSelect = $("#pattern-select") as HTMLSelectElement;
 
-  patternOptions.forEach((patternOption) => {
+  patternOptions.forEach(({ textContent, value }) => {
     const option = createHtmlElement("option");
 
-    option.setAttribute("value", patternOption);
-    option.textContent = patternOption;
+    option.setAttribute("value", value);
+    option.textContent = textContent;
 
     patternSelect.append(option);
   });
