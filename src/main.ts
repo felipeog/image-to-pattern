@@ -3,7 +3,6 @@
 // =============================================================================
 
 /*
-add margin to svg
 light and dark modes
 show original image
 different patterns (https://br.pinterest.com/felipeog476/image-to-pattern/)
@@ -90,6 +89,7 @@ function handleFormSubmit(event: SubmitEvent) {
     canvas.height = img.height;
     context.drawImage(img, 0, 0);
 
+    const margin = img.width * (1 / 10);
     const colCount = columns;
     const width = img.width / colCount;
     const rowCount = Math.floor(img.height / width);
@@ -97,8 +97,15 @@ function handleFormSubmit(event: SubmitEvent) {
 
     outputSvg.setAttribute(
       "viewBox",
-      `0 0 ${colCount * width} ${rowCount * height}`
+      `0 0 ${colCount * width + margin * 2} ${rowCount * height + margin * 2}`
     );
+
+    const rect = document.createElementNS(xmlns, "rect");
+
+    rect.setAttribute("fill", "white");
+    rect.setAttribute("width", String(colCount * width + margin * 2));
+    rect.setAttribute("height", String(rowCount * height + margin * 2));
+    outputSvg.append(rect);
 
     const whites = [] as number[][];
     const blacks = [] as number[][];
@@ -149,42 +156,37 @@ function handleFormSubmit(event: SubmitEvent) {
       const firstRow = 0;
       const firstBlack = blacks[firstRow][col];
 
-      d += `M ${col * width}, ${0} `;
+      d += `M ${col * width + margin}, ${0 + margin} `;
+      // prettier-ignore
       d += [
         "C",
-        `${col * width}, ${firstRow * height + height * (1 / 4)}`,
-        `${col * width + firstBlack * width}, ${
-          firstRow * height + height * (1 / 4)
-        }`,
-        `${col * width + firstBlack * width}, ${
-          firstRow * height + height * (1 / 2)
-        } `,
+        `${col * width + margin}, ${firstRow * height + height * (1 / 4) + margin}`,
+        `${col * width + firstBlack * width + margin}, ${firstRow * height + height * (1 / 4) + margin}`,
+        `${col * width + firstBlack * width + margin}, ${firstRow * height + height * (1 / 2) + margin} `,
       ].join(" ");
 
       for (let row = 0; row < rowCount - 1; row++) {
         const currBlack = blacks[row][col];
         const nextBlack = blacks[row + 1][col];
 
+        // prettier-ignore
         d += [
           "C",
-          `${col * width + currBlack * width}, ${row * height + height}`,
-          `${col * width + nextBlack * width}, ${(row + 1) * height}`,
-          `${col * width + nextBlack * width}, ${
-            (row + 1) * height + height * (1 / 2)
-          } `,
+          `${col * width + currBlack * width + margin}, ${row * height + height + margin}`,
+          `${col * width + nextBlack * width + margin}, ${(row + 1) * height + margin}`,
+          `${col * width + nextBlack * width + margin}, ${(row + 1) * height + height * (1 / 2) + margin} `,
         ].join(" ");
       }
 
       const lastRow = rowCount - 1;
       const lastBlack = blacks[lastRow][col];
 
+      // prettier-ignore
       d += [
         "C",
-        `${col * width + lastBlack * width}, ${
-          lastRow * height + height * (3 / 4)
-        }`,
-        `${col * width}, ${lastRow * height + height * (3 / 4)}`,
-        `${col * width}, ${lastRow * height + height} `,
+        `${col * width + lastBlack * width + margin}, ${lastRow * height + height * (3 / 4) + margin}`,
+        `${col * width + margin}, ${lastRow * height + height * (3 / 4) + margin}`,
+        `${col * width + margin}, ${lastRow * height + height + margin} `,
       ].join(" ");
       d += `z`;
 
