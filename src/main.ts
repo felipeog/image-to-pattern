@@ -3,11 +3,10 @@
 // =============================================================================
 
 /*
-svg download
-different patterns (https://br.pinterest.com/felipeog476/image-to-pattern/)
-light and dark modes
 add margin to svg
+light and dark modes
 show original image
+different patterns (https://br.pinterest.com/felipeog476/image-to-pattern/)
 */
 
 // =============================================================================
@@ -15,7 +14,6 @@ show original image
 // =============================================================================
 
 const xmlns = "http://www.w3.org/2000/svg";
-const imageOptions = ["/skull-0.png", "/skull-1.png", "/skull-2.png"];
 
 // =============================================================================
 // elements
@@ -27,6 +25,9 @@ const context = canvas.getContext("2d", { willReadFrequently: true });
 const form = document.querySelector("#file-form") as HTMLFormElement;
 const imageForm = document.querySelector("#image-form") as HTMLFormElement;
 const outputSvg = document.querySelector("#output") as SVGSVGElement;
+const downloadButton = document.querySelector(
+  "#download-button"
+) as HTMLButtonElement;
 
 // =============================================================================
 // event listeners
@@ -35,12 +36,14 @@ const outputSvg = document.querySelector("#output") as SVGSVGElement;
 window.addEventListener("load", handleWindowLoad);
 form.addEventListener("submit", handleFormSubmit);
 imageForm.addEventListener("submit", handleFormSubmit);
+downloadButton.addEventListener("click", handleDownloadButtonClick);
 
 // =============================================================================
 // event handlers
 // =============================================================================
 
 function handleWindowLoad() {
+  const imageOptions = ["/skull-0.png", "/skull-1.png", "/skull-2.png"];
   const imageSelect = document.querySelector(
     "#image-select"
   ) as HTMLSelectElement;
@@ -191,4 +194,20 @@ function handleFormSubmit(event: SubmitEvent) {
   };
 
   img.src = imgSrc;
+}
+
+function handleDownloadButtonClick() {
+  const serializer = new XMLSerializer();
+  const svgString = serializer.serializeToString(outputSvg);
+  const blob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+  const link = document.createElement("a");
+
+  link.href = URL.createObjectURL(blob);
+  link.download = "image-to-pattern.svg";
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  URL.revokeObjectURL(link.href);
 }
