@@ -86,6 +86,7 @@ function handleFormSubmit(event: SubmitEvent) {
   const background = String(formData.get("background"));
   const margin = Number(formData.get("margin"));
   const pattern = formData.get("pattern") as string;
+  const mode = formData.get("mode") as string;
   let imgSrc = "";
 
   if (input === "file") {
@@ -161,13 +162,16 @@ function handleFormSubmit(event: SubmitEvent) {
         b = Math.round(b / numPixels);
         a = Math.round(a / numPixels);
 
-        const white = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-        const black = (255 - white) / 255;
+        const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        const white = luminance / 255;
+        const black = (255 - luminance) / 255;
 
         whites[row].push(white);
         blacks[row].push(black);
       }
     }
+
+    const matrix = mode === "lightness" ? whites : blacks;
 
     if (pattern === "lines") {
       for (let col = 0; col < colCount; col++) {
@@ -175,7 +179,7 @@ function handleFormSubmit(event: SubmitEvent) {
         let d = "";
 
         const firstRow = 0;
-        const firstBlack = blacks[firstRow][col];
+        const firstBlack = matrix[firstRow][col];
 
         d += `M ${col * width + offset}, ${0 + offset} `;
         // prettier-ignore
@@ -187,8 +191,8 @@ function handleFormSubmit(event: SubmitEvent) {
       ].join(" ");
 
         for (let row = 0; row < rowCount - 1; row++) {
-          const currBlack = blacks[row][col];
-          const nextBlack = blacks[row + 1][col];
+          const currBlack = matrix[row][col];
+          const nextBlack = matrix[row + 1][col];
 
           // prettier-ignore
           d += [
@@ -200,7 +204,7 @@ function handleFormSubmit(event: SubmitEvent) {
         }
 
         const lastRow = rowCount - 1;
-        const lastBlack = blacks[lastRow][col];
+        const lastBlack = matrix[lastRow][col];
 
         // prettier-ignore
         d += [
@@ -220,7 +224,7 @@ function handleFormSubmit(event: SubmitEvent) {
     if (pattern === "dots") {
       for (let row = 0; row < rowCount; row++) {
         for (let col = 0; col < colCount; col++) {
-          const black = blacks[row][col];
+          const black = matrix[row][col];
           const circle = createSvgElement("circle");
 
           circle.setAttribute("fill", foreground);
@@ -239,7 +243,7 @@ function handleFormSubmit(event: SubmitEvent) {
         let d = `M ${col * width + offset}, ${0 + offset} `;
 
         for (let row = 0; row < rowCount; row++) {
-          const black = blacks[row][col];
+          const black = matrix[row][col];
 
           // prettier-ignore
           d += `L ${col * width + black * width + offset}, ${row * height + height / 2 + offset} `;
