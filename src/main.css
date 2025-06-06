@@ -1,3 +1,7 @@
+html {
+  color-scheme: light dark;
+}
+
 body {
   max-width: 960px;
   margin: 0 auto;
