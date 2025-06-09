@@ -1,3 +1,6 @@
+import { $, createHtmlElement, createSvgElement } from "./helpers";
+import { imageOptions, patternOptions } from "./constants";
+
 // https://br.pinterest.com/felipeog476/image-to-pattern/
 
 // =============================================================================
@@ -9,25 +12,6 @@ improve layout
 add image attribution
 separate pattern logic
 */
-
-// =============================================================================
-// constants
-// =============================================================================
-
-const imageOptions = [
-  { textContent: "Skull 0", value: "/skull-0.png" },
-  { textContent: "Skull 1", value: "/skull-1.png" },
-  { textContent: "Skull 2", value: "/skull-2.png" },
-];
-const patternOptions = [
-  { textContent: "Connected dots 1", value: "connected-dots-1" },
-  { textContent: "Connected dots 2", value: "connected-dots-2" },
-  { textContent: "Dice", value: "dice" },
-  { textContent: "Diagonal dots", value: "diagonal-dots" },
-  { textContent: "Dots", value: "dots" },
-  { textContent: "Lines", value: "lines" },
-  { textContent: "Triangles", value: "triangles" },
-];
 
 // =============================================================================
 // elements
@@ -647,34 +631,4 @@ function handleColorReverseButtonClick() {
 
   foreground.value = background.value;
   background.value = foregroundCopy;
-}
-
-// =============================================================================
-// helpers
-// =============================================================================
-
-function $(selectors: any) {
-  return document.querySelector(selectors);
-}
-
-// function $$(selectors: any) {
-//   return document.querySelectorAll(selectors);
-// }
-
-function createHtmlElement<K extends keyof HTMLElementTagNameMap>(
-  tagName: K,
-  options?: ElementCreationOptions
-) {
-  return document.createElement(tagName, options);
-}
-
-function createSvgElement(
-  qualifiedName: string,
-  options?: ElementCreationOptions
-) {
-  return document.createElementNS(
-    "http://www.w3.org/2000/svg",
-    qualifiedName,
-    options
-  );
 }
