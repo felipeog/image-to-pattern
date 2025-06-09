@@ -6,6 +6,8 @@
 
 /*
 improve layout
+add image attribution
+separate pattern logic
 */
 
 // =============================================================================
