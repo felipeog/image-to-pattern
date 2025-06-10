@@ -22,11 +22,11 @@ export function lines({
     d += `M ${col * width + offset}, ${0 + offset} `;
     // prettier-ignore
     d += [
-        "C",
-        `${col * width + offset}, ${firstRow * height + height * (1 / 4) + offset}`,
-        `${col * width + firstItem * width + offset}, ${firstRow * height + height * (1 / 4) + offset}`,
-        `${col * width + firstItem * width + offset}, ${firstRow * height + height * (1 / 2) + offset} `,
-      ].join(" ");
+      "C",
+      `${col * width + offset}, ${firstRow * height + height * (1 / 4) + offset}`,
+      `${col * width + firstItem * width + offset}, ${firstRow * height + height * (1 / 4) + offset}`,
+      `${col * width + firstItem * width + offset}, ${firstRow * height + height * (1 / 2) + offset} `,
+    ].join(" ");
 
     for (let row = 0; row < rowCount - 1; row++) {
       const currItem = matrix[row][col];
@@ -34,11 +34,11 @@ export function lines({
 
       // prettier-ignore
       d += [
-          "C",
-          `${col * width + currItem * width + offset}, ${row * height + height + offset}`,
-          `${col * width + nextItem * width + offset}, ${(row + 1) * height + offset}`,
-          `${col * width + nextItem * width + offset}, ${(row + 1) * height + height * (1 / 2) + offset} `,
-        ].join(" ");
+        "C",
+        `${col * width + currItem * width + offset}, ${row * height + height + offset}`,
+        `${col * width + nextItem * width + offset}, ${(row + 1) * height + offset}`,
+        `${col * width + nextItem * width + offset}, ${(row + 1) * height + height * (1 / 2) + offset} `,
+      ].join(" ");
     }
 
     const lastRow = rowCount - 1;
@@ -46,11 +46,11 @@ export function lines({
 
     // prettier-ignore
     d += [
-        "C",
-        `${col * width + lastItem * width + offset}, ${lastRow * height + height * (3 / 4) + offset}`,
-        `${col * width + offset}, ${lastRow * height + height * (3 / 4) + offset}`,
-        `${col * width + offset}, ${lastRow * height + height + offset} `,
-      ].join(" ");
+      "C",
+      `${col * width + lastItem * width + offset}, ${lastRow * height + height * (3 / 4) + offset}`,
+      `${col * width + offset}, ${lastRow * height + height * (3 / 4) + offset}`,
+      `${col * width + offset}, ${lastRow * height + height + offset} `,
+    ].join(" ");
     d += `z`;
 
     path.setAttribute("fill", foreground);
