@@ -1,5 +1,6 @@
 import { $, createHtmlElement, createSvgElement } from "./helpers";
 import { imageOptions, patternOptions } from "./constants";
+import { elements } from "./elements";
 
 // https://br.pinterest.com/felipeog476/image-to-pattern/
 
@@ -14,26 +15,16 @@ separate pattern logic
 */
 
 // =============================================================================
-// elements
-// =============================================================================
-
-const img = new Image();
-const canvas = new OffscreenCanvas(0, 0);
-const context = canvas.getContext("2d", { willReadFrequently: true });
-const form = $("#form") as HTMLFormElement;
-const inputImage = $("#input") as HTMLImageElement;
-const outputSvg = $("#output") as SVGSVGElement;
-const downloadButton = $("#download-button") as HTMLButtonElement;
-const colorReverseButton = $("#color-reverse") as HTMLButtonElement;
-
-// =============================================================================
 // event listeners
 // =============================================================================
 
 window.addEventListener("load", handleWindowLoad);
-form.addEventListener("submit", handleFormSubmit);
-downloadButton.addEventListener("click", handleDownloadButtonClick);
-colorReverseButton.addEventListener("click", handleColorReverseButtonClick);
+elements.form.addEventListener("submit", handleFormSubmit);
+elements.downloadButton.addEventListener("click", handleDownloadButtonClick);
+elements.colorReverseButton.addEventListener(
+  "click",
+  handleColorReverseButtonClick
+);
 
 // =============================================================================
 // event handlers
@@ -66,8 +57,6 @@ function handleWindowLoad() {
 function handleFormSubmit(event: SubmitEvent) {
   event.preventDefault();
 
-  if (!context) return;
-
   const formElement = event.target as HTMLFormElement;
   const formData = new FormData(formElement);
   const input = String(formData.get("input"));
@@ -93,20 +82,21 @@ function handleFormSubmit(event: SubmitEvent) {
 
   if (!imgSrc) return;
 
-  img.onload = () => {
-    outputSvg.innerHTML = "";
+  elements.img.onload = () => {
+    if (!elements.context) return;
 
-    canvas.width = img.width;
-    canvas.height = img.height;
-    context.drawImage(img, 0, 0);
+    elements.outputSvg.innerHTML = "";
+    elements.canvas.width = elements.img.width;
+    elements.canvas.height = elements.img.height;
+    elements.context.drawImage(elements.img, 0, 0);
 
-    const offset = img.width * margin;
+    const offset = elements.img.width * margin;
     const colCount = columns;
-    const width = img.width / colCount;
-    const rowCount = Math.floor(img.height / width);
-    const height = img.height / rowCount;
+    const width = elements.img.width / colCount;
+    const rowCount = Math.floor(elements.img.height / width);
+    const height = elements.img.height / rowCount;
 
-    outputSvg.setAttribute(
+    elements.outputSvg.setAttribute(
       "viewBox",
       `0 0 ${colCount * width + offset * 2} ${rowCount * height + offset * 2}`
     );
@@ -116,7 +106,7 @@ function handleFormSubmit(event: SubmitEvent) {
     rect.setAttribute("fill", background);
     rect.setAttribute("width", String(colCount * width + offset * 2));
     rect.setAttribute("height", String(rowCount * height + offset * 2));
-    outputSvg.append(rect);
+    elements.outputSvg.append(rect);
 
     const whites = [] as number[][];
     const blacks = [] as number[][];
@@ -126,7 +116,7 @@ function handleFormSubmit(event: SubmitEvent) {
       blacks[row] = [];
 
       for (let col = 0; col < colCount; col++) {
-        const imageData = context.getImageData(
+        const imageData = elements.context.getImageData(
           col * width,
           row * height,
           width,
@@ -207,7 +197,7 @@ function handleFormSubmit(event: SubmitEvent) {
 
         path.setAttribute("fill", foreground);
         path.setAttribute("d", d);
-        outputSvg.append(path);
+        elements.outputSvg.append(path);
       }
     }
 
@@ -222,7 +212,7 @@ function handleFormSubmit(event: SubmitEvent) {
           circle.setAttribute("cx", String(col * width + width / 2 + offset));
           circle.setAttribute("cy", String(row * height + height / 2 + offset));
 
-          outputSvg.append(circle);
+          elements.outputSvg.append(circle);
         }
       }
     }
@@ -258,7 +248,7 @@ function handleFormSubmit(event: SubmitEvent) {
             String(row * height + height * (1 / 2) + offset)
           );
 
-          outputSvg.append(circle);
+          elements.outputSvg.append(circle);
 
           const nextRowItem = Math.round(matrix?.[row + 1]?.[col]);
           const nextColItem = Math.round(matrix?.[row]?.[col + 1]);
@@ -293,7 +283,7 @@ function handleFormSubmit(event: SubmitEvent) {
               ].join("")
             );
 
-            outputSvg.append(path);
+            elements.outputSvg.append(path);
           }
 
           if (nextRowItem === item) {
@@ -326,7 +316,7 @@ function handleFormSubmit(event: SubmitEvent) {
               ].join("")
             );
 
-            outputSvg.append(path);
+            elements.outputSvg.append(path);
           }
         }
       }
@@ -362,7 +352,7 @@ function handleFormSubmit(event: SubmitEvent) {
             String(row * height + height * (1 / 2) + offset)
           );
 
-          outputSvg.append(circle);
+          elements.outputSvg.append(circle);
 
           if (item < 0.5) continue;
 
@@ -400,7 +390,7 @@ function handleFormSubmit(event: SubmitEvent) {
               ].join("")
             );
 
-            outputSvg.append(path);
+            elements.outputSvg.append(path);
           }
 
           if (nextRowItem >= 0.5) {
@@ -434,7 +424,7 @@ function handleFormSubmit(event: SubmitEvent) {
               ].join("")
             );
 
-            outputSvg.append(path);
+            elements.outputSvg.append(path);
           }
         }
       }
@@ -455,7 +445,7 @@ function handleFormSubmit(event: SubmitEvent) {
           circle.setAttribute("cx", String(col * width + colOffset + offset));
           circle.setAttribute("cy", String(row * height + height / 2 + offset));
 
-          outputSvg.append(circle);
+          elements.outputSvg.append(circle);
         }
       }
     }
@@ -478,7 +468,7 @@ function handleFormSubmit(event: SubmitEvent) {
 
         path.setAttribute("fill", foreground);
         path.setAttribute("d", d);
-        outputSvg.append(path);
+        elements.outputSvg.append(path);
       }
     }
 
@@ -512,7 +502,7 @@ function handleFormSubmit(event: SubmitEvent) {
             c1.setAttribute("cx", String(l + width * (1 / 2) + offset));
             c1.setAttribute("cy", String(t + height * (1 / 2) + offset));
 
-            outputSvg.append(c1);
+            elements.outputSvg.append(c1);
           }
 
           if (face === 2) {
@@ -522,7 +512,7 @@ function handleFormSubmit(event: SubmitEvent) {
             c2.setAttribute("cx", String(l + width * (3 / 4) + offset));
             c2.setAttribute("cy", String(t + height * (3 / 4) + offset));
 
-            outputSvg.append(c1, c2);
+            elements.outputSvg.append(c1, c2);
           }
 
           if (face === 3) {
@@ -535,7 +525,7 @@ function handleFormSubmit(event: SubmitEvent) {
             c3.setAttribute("cx", String(l + width * (3 / 4) + offset));
             c3.setAttribute("cy", String(t + height * (3 / 4) + offset));
 
-            outputSvg.append(c1, c2, c3);
+            elements.outputSvg.append(c1, c2, c3);
           }
 
           if (face === 4) {
@@ -551,7 +541,7 @@ function handleFormSubmit(event: SubmitEvent) {
             c4.setAttribute("cx", String(l + width * (1 / 4) + offset));
             c4.setAttribute("cy", String(t + height * (3 / 4) + offset));
 
-            outputSvg.append(c1, c2, c3, c4);
+            elements.outputSvg.append(c1, c2, c3, c4);
           }
 
           if (face === 5) {
@@ -570,7 +560,7 @@ function handleFormSubmit(event: SubmitEvent) {
             c5.setAttribute("cx", String(l + width * (1 / 4) + offset));
             c5.setAttribute("cy", String(t + height * (3 / 4) + offset));
 
-            outputSvg.append(c1, c2, c3, c4, c5);
+            elements.outputSvg.append(c1, c2, c3, c4, c5);
           }
 
           if (face === 6) {
@@ -592,25 +582,25 @@ function handleFormSubmit(event: SubmitEvent) {
             c6.setAttribute("cx", String(l + width * (3 / 4) + offset));
             c6.setAttribute("cy", String(t + height * (2 / 3) + offset));
 
-            outputSvg.append(c1, c2, c3, c4, c5, c6);
+            elements.outputSvg.append(c1, c2, c3, c4, c5, c6);
           }
         }
       }
     }
   };
 
-  img.src = imgSrc;
+  elements.img.src = imgSrc;
 
-  inputImage.onload = () => {
-    inputImage.style.display = "block";
+  elements.inputImage.onload = () => {
+    elements.inputImage.style.display = "block";
   };
 
-  inputImage.src = imgSrc;
+  elements.inputImage.src = imgSrc;
 }
 
 function handleDownloadButtonClick() {
   const serializer = new XMLSerializer();
-  const svgString = serializer.serializeToString(outputSvg);
+  const svgString = serializer.serializeToString(elements.outputSvg);
   const blob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
   const link = createHtmlElement("a");
 
