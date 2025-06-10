@@ -1,5 +1,5 @@
 import { createSvgElement } from "../helpers";
-import { PatternParameters, PatternReturn } from "./types";
+import type { PatternParameters, PatternReturn } from "./types";
 
 export function diagonalDots({
   matrix,

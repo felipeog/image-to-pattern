@@ -1,5 +1,5 @@
 import { createSvgElement } from "../helpers";
-import { PatternParameters, PatternReturn } from "./types";
+import type { PatternParameters, PatternReturn } from "./types";
 
 // TODO: improve connection between circles
 export function connectedDots2({
