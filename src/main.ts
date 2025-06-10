@@ -12,7 +12,6 @@ https://br.pinterest.com/felipeog476/image-to-pattern/
 todo:
 - improve layout
 - add image attribution
-- separate pattern logic
 */
 
 window.addEventListener("load", handleWindowLoad);
