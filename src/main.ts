@@ -1,6 +1,10 @@
-import { $, createHtmlElement, createSvgElement } from "./helpers";
-import { imageOptions, patternOptions } from "./constants";
+import { createSvgElement } from "./helpers";
 import { elements } from "./elements";
+import {
+  handleWindowLoad,
+  handleDownloadButtonClick,
+  handleColorReverseButtonClick,
+} from "./handlers";
 
 // https://br.pinterest.com/felipeog476/image-to-pattern/
 
@@ -29,30 +33,6 @@ elements.colorReverseButton.addEventListener(
 // =============================================================================
 // event handlers
 // =============================================================================
-
-function handleWindowLoad() {
-  const imageSelect = $("#image-select") as HTMLSelectElement;
-
-  imageOptions.forEach(({ textContent, value }) => {
-    const option = createHtmlElement("option");
-
-    option.setAttribute("value", value);
-    option.textContent = textContent;
-
-    imageSelect.append(option);
-  });
-
-  const patternSelect = $("#pattern-select") as HTMLSelectElement;
-
-  patternOptions.forEach(({ textContent, value }) => {
-    const option = createHtmlElement("option");
-
-    option.setAttribute("value", value);
-    option.textContent = textContent;
-
-    patternSelect.append(option);
-  });
-}
 
 function handleFormSubmit(event: SubmitEvent) {
   event.preventDefault();
@@ -596,29 +576,4 @@ function handleFormSubmit(event: SubmitEvent) {
   };
 
   elements.inputImage.src = imgSrc;
-}
-
-function handleDownloadButtonClick() {
-  const serializer = new XMLSerializer();
-  const svgString = serializer.serializeToString(elements.outputSvg);
-  const blob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
-  const link = createHtmlElement("a");
-
-  link.href = URL.createObjectURL(blob);
-  link.download = "image-to-pattern.svg";
-
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-
-  URL.revokeObjectURL(link.href);
-}
-
-function handleColorReverseButtonClick() {
-  const foreground = $("#foreground");
-  const background = $("#background");
-  const foregroundCopy = foreground.value;
-
-  foreground.value = background.value;
-  background.value = foregroundCopy;
 }
