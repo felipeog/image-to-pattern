@@ -63,16 +63,30 @@
       <fieldset>
         <legend>input</legend>
 
-        <input type="radio" name="input" value="file" checked />
         <label>
+          <input type="radio" name="input" value="file" checked />
           file:
-          <input type="file" name="upload" accept="image/*" />
         </label>
+        <input type="file" name="upload" accept="image/*" />
         <br />
-        <input type="radio" name="input" value="image" />
         <label>
+          <input type="radio" name="input" value="image" />
           image:
-          <select name="image" id="image-select"></select>
+        </label>
+        <select name="image" id="image-select"></select>
+        <br />
+        <label>
+          <input type="radio" name="input" value="generative" />
+          generative:
+        </label>
+        <select name="generative" id="generative-select"></select>
+        <label>
+          width
+          <input type="number" name="noise-width" value="800" />
+        </label>
+        <label>
+          height
+          <input type="number" name="noise-height" value="800" />
         </label>
       </fieldset>
 
@@ -109,6 +123,41 @@
       <img id="input" src="" alt="original image" />
       <svg id="output" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
+
+    <template id="generative-noise">
+      <svg
+        id="generative-noise-svg"
+        viewBox="0 0 800 800"
+        width="800"
+        height="800"
+      >
+        <defs>
+          <filter id="generative-noise-filter">
+            <feTurbulence
+              id="generative-noise-turbulence"
+              type="fractalNoise"
+              stitchTiles="stitch"
+              baseFrequency="0.01"
+              numOctaves="3"
+              seed="0"
+            />
+            <feColorMatrix
+              id="generative-noise-color-matrix"
+              in="generative-noise-filter"
+              type="saturate"
+              values="0"
+            />
+          </filter>
+        </defs>
+
+        <rect width="100%" height="100%" fill="#000" />
+        <rect
+          width="100%"
+          height="100%"
+          filter="url(#generative-noise-filter)"
+        />
+      </svg>
+    </template>
 
     <script type="module" src="/src/main.ts"></script>
   </body>

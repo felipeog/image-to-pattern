@@ -2,6 +2,8 @@ import { createSvgElement } from "../helpers";
 import { elements } from "../elements";
 import { getPattern } from "../patterns";
 import { PatternMap } from "../patterns/types";
+import { templates } from "../generative";
+import { GenerativeMap } from "../generative/types";
 
 export function handleFormSubmit(event: SubmitEvent) {
   event.preventDefault();
@@ -15,6 +17,7 @@ export function handleFormSubmit(event: SubmitEvent) {
   const background = String(formData.get("background"));
   const margin = Number(formData.get("margin"));
   const pattern = String(formData.get("pattern")) as PatternMap;
+  const generative = String(formData.get("generative")) as GenerativeMap;
   const mode = String(formData.get("mode"));
 
   let imgSrc = "";
@@ -26,9 +29,42 @@ export function handleFormSubmit(event: SubmitEvent) {
   }
 
   if (input === "image") {
-    const image = formData.get("image") as string;
+    const image = String(formData.get("image"));
     if (!image) return;
     imgSrc = image;
+  }
+
+  if (input === "generative") {
+    const width = Number(formData.get("noise-width"));
+    const height = Number(formData.get("noise-height"));
+
+    if (!width || !height) return;
+
+    if (generative === GenerativeMap.NOISE) {
+      const template = templates.noise;
+      const node = template.content.cloneNode(true) as Element;
+      const svg = node.querySelector("#generative-noise-svg") as SVGSVGElement;
+      const turbulence = node.querySelector(
+        "#generative-noise-turbulence"
+      ) as SVGFilterElement;
+
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      svg.setAttribute("width", String(width));
+      svg.setAttribute("height", String(height));
+      turbulence.setAttribute(
+        "seed",
+        String(Math.round(Math.random() * 1_000_000))
+      );
+
+      const serializer = new XMLSerializer();
+      const svgString = serializer.serializeToString(svg);
+      const blob = new Blob([svgString], {
+        type: "image/svg+xml;charset=utf-8",
+      });
+      const url = URL.createObjectURL(blob);
+
+      imgSrc = url;
+    }
   }
 
   if (!imgSrc) return;
@@ -42,10 +78,10 @@ export function handleFormSubmit(event: SubmitEvent) {
     elements.context.drawImage(elements.img, 0, 0);
 
     const offset = elements.img.width * margin;
-    const colCount = columns;
-    const width = elements.img.width / colCount;
+    const colCount = Math.min(elements.img.width, columns);
+    const width = Math.max(1, elements.img.width / colCount);
     const rowCount = Math.floor(elements.img.height / width);
-    const height = elements.img.height / rowCount;
+    const height = Math.max(1, elements.img.height / rowCount);
 
     elements.outputSvg.setAttribute(
       "viewBox",
