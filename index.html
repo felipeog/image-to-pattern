@@ -12,6 +12,7 @@
   </head>
 
   <body>
+    <!-- start: form -->
     <form id="form">
       <fieldset>
         <legend>colors</legend>
@@ -112,6 +113,7 @@
       <br />
       <input type="submit" value="generate" />
     </form>
+    <!-- end: form -->
 
     <hr />
 
@@ -124,29 +126,23 @@
       <svg id="output" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
 
-    <template id="generative-noise">
-      <svg
-        id="generative-noise-svg"
-        viewBox="0 0 800 800"
-        width="800"
-        height="800"
-      >
+    <!-- start: templates -->
+    <template id="generative-noise-1">
+      <svg viewBox="0 0 800 800">
         <defs>
-          <filter id="generative-noise-filter">
+          <filter id="generative-noise-filter-1">
             <feTurbulence
-              id="generative-noise-turbulence"
               type="fractalNoise"
-              stitchTiles="stitch"
               baseFrequency="0.01"
-              numOctaves="3"
+              stitchTiles="stitch"
               seed="0"
             />
-            <feColorMatrix
-              id="generative-noise-color-matrix"
-              in="generative-noise-filter"
-              type="saturate"
-              values="0"
-            />
+            <feComponentTransfer>
+              <feFuncR type="linear" slope="2" intercept="-0.5"></feFuncR>
+              <feFuncG type="linear" slope="2" intercept="-0.5"></feFuncG>
+              <feFuncB type="linear" slope="2" intercept="-0.5"></feFuncB>
+            </feComponentTransfer>
+            <feColorMatrix type="saturate" values="0" />
           </filter>
         </defs>
 
@@ -154,10 +150,99 @@
         <rect
           width="100%"
           height="100%"
-          filter="url(#generative-noise-filter)"
+          filter="url(#generative-noise-filter-1)"
         />
       </svg>
     </template>
+
+    <template id="generative-noise-2">
+      <svg viewBox="0 0 800 800">
+        <defs>
+          <filter id="generative-noise-filter-2">
+            <feTurbulence
+              type="turbulence"
+              baseFrequency="0.01"
+              stitchTiles="stitch"
+              seed="0"
+            />
+            <feComponentTransfer>
+              <feFuncR type="linear" slope="2" intercept="-0.5"></feFuncR>
+              <feFuncG type="linear" slope="2" intercept="-0.5"></feFuncG>
+              <feFuncB type="linear" slope="2" intercept="-0.5"></feFuncB>
+            </feComponentTransfer>
+            <feColorMatrix type="saturate" values="0" />
+          </filter>
+        </defs>
+
+        <rect width="100%" height="100%" fill="#fff" />
+        <rect
+          width="100%"
+          height="100%"
+          filter="url(#generative-noise-filter-2)"
+        />
+      </svg>
+    </template>
+
+    <template id="generative-noise-3">
+      <svg viewBox="0 0 800 800">
+        <defs>
+          <filter id="generative-noise-filter-3">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.02"
+              numOctaves="2"
+              stitchTiles="stitch"
+              seed="0"
+            />
+            <feComponentTransfer>
+              <feFuncR type="linear" slope="2" intercept="-0.5"></feFuncR>
+              <feFuncG type="linear" slope="2" intercept="-0.5"></feFuncG>
+              <feFuncB type="linear" slope="2" intercept="-0.5"></feFuncB>
+            </feComponentTransfer>
+            <feColorMatrix type="saturate" values="0" />
+            <feMorphology operator="dilate" radius="10" />
+          </filter>
+        </defs>
+
+        <rect width="100%" height="100%" fill="#000" />
+        <rect
+          width="100%"
+          height="100%"
+          filter="url(#generative-noise-filter-3)"
+        />
+      </svg>
+    </template>
+
+    <template id="generative-noise-4">
+      <svg viewBox="0 0 800 800">
+        <defs>
+          <filter id="generative-noise-filter-4">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.02"
+              numOctaves="2"
+              stitchTiles="stitch"
+              seed="0"
+            />
+            <feComponentTransfer>
+              <feFuncR type="linear" slope="2" intercept="-0.5"></feFuncR>
+              <feFuncG type="linear" slope="2" intercept="-0.5"></feFuncG>
+              <feFuncB type="linear" slope="2" intercept="-0.5"></feFuncB>
+            </feComponentTransfer>
+            <feColorMatrix type="saturate" values="0" />
+            <feMorphology operator="erode" radius="10" />
+          </filter>
+        </defs>
+
+        <rect width="100%" height="100%" fill="#000" />
+        <rect
+          width="100%"
+          height="100%"
+          filter="url(#generative-noise-filter-4)"
+        />
+      </svg>
+    </template>
+    <!-- end: templates -->
 
     <script type="module" src="/src/main.ts"></script>
   </body>

@@ -1,8 +1,7 @@
-import { createSvgElement } from "../helpers";
+import { $, createSvgElement } from "../helpers";
 import { elements } from "../elements";
 import { getPattern } from "../patterns";
 import { PatternMap } from "../patterns/types";
-import { templates } from "../generative";
 import { GenerativeMap } from "../generative/types";
 
 export function handleFormSubmit(event: SubmitEvent) {
@@ -37,34 +36,32 @@ export function handleFormSubmit(event: SubmitEvent) {
   if (input === "generative") {
     const width = Number(formData.get("noise-width"));
     const height = Number(formData.get("noise-height"));
+    const template = $(`#${generative}`) as HTMLTemplateElement;
 
-    if (!width || !height) return;
+    if (!width || !height || !template) return;
 
-    if (generative === GenerativeMap.NOISE) {
-      const template = templates.noise;
-      const node = template.content.cloneNode(true) as Element;
-      const svg = node.querySelector("#generative-noise-svg") as SVGSVGElement;
-      const turbulence = node.querySelector(
-        "#generative-noise-turbulence"
-      ) as SVGFilterElement;
+    const node = template.content.cloneNode(true) as Element;
+    const svg = node.querySelector("svg") as SVGSVGElement;
+    const turbulence = node.querySelector(
+      "feTurbulence"
+    ) as SVGFETurbulenceElement;
 
-      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
-      svg.setAttribute("width", String(width));
-      svg.setAttribute("height", String(height));
-      turbulence.setAttribute(
-        "seed",
-        String(Math.round(Math.random() * 1_000_000))
-      );
+    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+    svg.setAttribute("width", String(width));
+    svg.setAttribute("height", String(height));
+    turbulence.setAttribute(
+      "seed",
+      String(Math.round(Math.random() * 1_000_000))
+    );
 
-      const serializer = new XMLSerializer();
-      const svgString = serializer.serializeToString(svg);
-      const blob = new Blob([svgString], {
-        type: "image/svg+xml;charset=utf-8",
-      });
-      const url = URL.createObjectURL(blob);
+    const serializer = new XMLSerializer();
+    const svgString = serializer.serializeToString(svg);
+    const blob = new Blob([svgString], {
+      type: "image/svg+xml;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
 
-      imgSrc = url;
-    }
+    imgSrc = url;
   }
 
   if (!imgSrc) return;
