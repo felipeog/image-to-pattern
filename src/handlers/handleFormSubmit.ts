@@ -1,14 +1,7 @@
-import { elements } from "../elements";
 import { createSvgElement } from "../helpers";
-import {
-  connectedDots1,
-  connectedDots2,
-  diagonalDots,
-  dice,
-  dots,
-  lines,
-  triangles,
-} from "../patterns";
+import { elements } from "../elements";
+import { getPattern } from "../patterns";
+import { PatternMap } from "../patterns/types";
 
 export function handleFormSubmit(event: SubmitEvent) {
   event.preventDefault();
@@ -21,24 +14,20 @@ export function handleFormSubmit(event: SubmitEvent) {
   const foreground = String(formData.get("foreground"));
   const background = String(formData.get("background"));
   const margin = Number(formData.get("margin"));
-  const pattern = String(formData.get("pattern"));
+  const pattern = String(formData.get("pattern")) as PatternMap;
   const mode = String(formData.get("mode"));
 
   let imgSrc = "";
 
   if (input === "file") {
     const file = formData.get("upload") as Blob;
-
     if (!file) return;
-
     imgSrc = URL.createObjectURL(file);
   }
 
   if (input === "image") {
     const image = formData.get("image") as string;
-
     if (!image) return;
-
     imgSrc = image;
   }
 
@@ -116,34 +105,11 @@ export function handleFormSubmit(event: SubmitEvent) {
 
     const matrix = mode === "lightness" ? whites : blacks;
     const patternParameters = { matrix, width, height, foreground, offset };
+    const group = getPattern(pattern, patternParameters);
 
-    if (pattern === "lines") {
-      elements.outputSvg.append(lines(patternParameters));
-    }
+    if (!group) return;
 
-    if (pattern === "dots") {
-      elements.outputSvg.append(dots(patternParameters));
-    }
-
-    if (pattern === "connected-dots-1") {
-      elements.outputSvg.append(connectedDots1(patternParameters));
-    }
-
-    if (pattern === "connected-dots-2") {
-      elements.outputSvg.append(connectedDots2(patternParameters));
-    }
-
-    if (pattern === "diagonal-dots") {
-      elements.outputSvg.append(diagonalDots(patternParameters));
-    }
-
-    if (pattern === "triangles") {
-      elements.outputSvg.append(triangles(patternParameters));
-    }
-
-    if (pattern === "dice") {
-      elements.outputSvg.append(dice(patternParameters));
-    }
+    elements.outputSvg.append(group);
 
     elements.inputImage.src = imgSrc;
     elements.inputImage.style.display = "block";
