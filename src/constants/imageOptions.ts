@@ -1,6 +1,9 @@
 import { ImageMap } from "../images/types";
 
 export const imageOptions = [
+  { textContent: "Paper 0", value: ImageMap.PAPER_0 },
+  { textContent: "Paper 1", value: ImageMap.PAPER_1 },
+  { textContent: "Paper 2", value: ImageMap.PAPER_2 },
   { textContent: "Skull 0", value: ImageMap.SKULL_0 },
   { textContent: "Skull 1", value: ImageMap.SKULL_1 },
   { textContent: "Skull 2", value: ImageMap.SKULL_2 },
