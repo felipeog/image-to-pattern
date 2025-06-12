@@ -18,7 +18,7 @@ export function letters({
 
     text {
       font-family: "Roboto Mono", monospace;
-      font-size: ${Math.min(width, height) * 0.8}px;
+      font-size: ${Math.min(width, height)}px;
       fill: ${foreground};
       dominant-baseline: middle;
       text-anchor: middle;
