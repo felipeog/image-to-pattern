@@ -6,6 +6,7 @@ export const patternOptions = [
   { textContent: "Diagonal dots", value: PatternMap.DIAGONAL_DOTS },
   { textContent: "Dice", value: PatternMap.DICE },
   { textContent: "Dots", value: PatternMap.DOTS },
+  { textContent: "Letters", value: PatternMap.LETTERS },
   { textContent: "Lines", value: PatternMap.LINES },
   { textContent: "Triangles", value: PatternMap.TRIANGLES },
 ];

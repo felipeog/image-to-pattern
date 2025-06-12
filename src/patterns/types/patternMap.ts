@@ -4,6 +4,7 @@ export enum PatternMap {
   DIAGONAL_DOTS = "diagonal-dots",
   DICE = "dice",
   DOTS = "dots",
+  LETTERS = "letters",
   LINES = "lines",
   TRIANGLES = "triangles",
 }

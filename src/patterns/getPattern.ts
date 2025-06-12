@@ -4,6 +4,7 @@ import {
   diagonalDots,
   dice,
   dots,
+  letters,
   lines,
   triangles,
 } from ".";
@@ -29,6 +30,9 @@ export function getPattern(
 
     case PatternMap.DOTS:
       return dots(parameters);
+
+    case PatternMap.LETTERS:
+      return letters(parameters);
 
     case PatternMap.LINES:
       return lines(parameters);
