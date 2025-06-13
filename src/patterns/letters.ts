@@ -1,4 +1,4 @@
-import { createHtmlElement, createSvgElement } from "../helpers";
+import { createSvgElement } from "../helpers";
 import type { PatternParameters, PatternReturn } from "./types";
 
 export function letters({
@@ -10,7 +10,7 @@ export function letters({
 }: PatternParameters): PatternReturn {
   const rowCount = matrix.length;
   const colCount = matrix[0].length;
-  const style = createHtmlElement("style");
+  const style = createSvgElement("style");
   const group = createSvgElement("g");
 
   style.textContent = `
