@@ -1,3 +1,3 @@
 # Image to Pattern
 
-Create patterns from images
+Create patterns from images.
